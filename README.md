@@ -108,6 +108,22 @@ event_route[htable:expired:ipban] {
 
 ## API Usage
 
+### List blocked IPs
+
+* **URL**: /
+* **METHOD**: `GET`
+* **Auth**: None
+* **RESPONSE**: 200
+
+### List blocked IPs Examples
+
+* GET `/`
+* RESPONSE `200 OK`
+
+```json
+{"ipv4":["192.168.10.1"],"ipv6":["2001:dead:beef::1"]}
+```
+
 ### Add/Block IP
 
 Add an IP to nftables. nftables or ip6tables will be chosen based on the IP.

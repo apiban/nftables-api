@@ -115,6 +115,7 @@ func main() {
 	router.HandleFunc("DELETE /", jsonHandleAddress)
 	router.HandleFunc("POST /", jsonHandleAddress)
 	router.HandleFunc("PUT /", jsonHandleAddress)
+	router.HandleFunc("GET /", listIPAddresses)
 	log.Print("[+] starting http server")
 	http.ListenAndServe("0.0.0.0:"+apiPort, router)
 }
@@ -587,5 +588,48 @@ func removeIPAddress(w http.ResponseWriter, r *http.Request) {
 	jsonresp, _ := sjson.Set("", "status", "ok")
 	jsonresp, _ = sjson.Set(jsonresp, "ipaddress", ipaddress)
 	jsonresp, _ = sjson.Set(jsonresp, "details", "removed from set "+setDetails.Set)
+	io.WriteString(w, jsonresp+"\n")
+}
+
+
+func NftListv4(setname string) ([]string, error) {
+	currentSet, err := nftlib.NftListSet(setname)
+	if err != nil {
+		return []string{}, err
+	}
+	return currentSet.Elements, nil
+}
+
+func NftListv6(setname string) ([]string, error) {
+	if useipv6 {
+		v6set := setname + "v6"
+		currentSet, err := nftlib.NftListSet(v6set)
+		if err != nil {
+			return []string{}, err
+		}
+		return currentSet.Elements, nil
+	}
+
+	return []string{}, nil
+}
+
+
+func listIPAddresses(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	log.Println("[o] received listIPAddresses request")
+
+	v4set, errv4 := NftListv4(setName)
+	v6set, errv6 := NftListv6(setName)
+	if errv4 != nil {
+		log.Println("[x] ipv4 set error:", errv4.Error())
+	}
+	if errv6 != nil {
+		log.Println("[x] ipv6 set error:", errv6.Error())
+	}
+	log.Println("ipv4", v4set)
+	log.Println("ipv6", v6set)
+	jsonresp, _ := sjson.Set("", "status", "ok")
+	jsonresp, _ = sjson.Set(jsonresp, "ipv4", v4set)
+	jsonresp, _ = sjson.Set(jsonresp, "ipv6", v6set)
 	io.WriteString(w, jsonresp+"\n")
 }
