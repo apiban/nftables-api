@@ -50,6 +50,7 @@ import (
 
 var (
 	apiPort     string
+	bindAddress string
 	setName     string
 	logFile     string
 	logFileLine bool
@@ -75,6 +76,9 @@ func init() {
 
 	flag.BoolVar(&useipv6, "ipv6", true, "use ipv6 (default is true)")
 	flag.BoolVar(&useipv6, "i", true, "use ipv6 (default is true)")
+
+	flag.StringVar(&bindAddress, "address", "0.0.0.0", "ip address to bind to")
+	flag.StringVar(&bindAddress, "a", "0.0.0.0", "ip address to bind to")
 }
 
 func main() {
@@ -117,7 +121,7 @@ func main() {
 	router.HandleFunc("PUT /", jsonHandleAddress)
 	router.HandleFunc("GET /", listIPAddresses)
 	log.Print("[+] starting http server")
-	http.ListenAndServe("0.0.0.0:"+apiPort, router)
+	http.ListenAndServe(bindAddress+":"+apiPort, router)
 }
 
 func addIPAddress(w http.ResponseWriter, r *http.Request) {
@@ -179,7 +183,7 @@ func checkIPAddress(ip string) bool {
 
 func checkIPAddressv4(ip string) (string, error) {
 	if net.ParseIP(ip) == nil {
-		return "err", errors.New("Not an IP address")
+		return "err", errors.New("not an ip address")
 	}
 
 	for i := 0; i < len(ip); i++ {
@@ -591,7 +595,6 @@ func removeIPAddress(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, jsonresp+"\n")
 }
 
-
 func NftListv4(setname string) ([]string, error) {
 	currentSet, err := nftlib.NftListSet(setname)
 	if err != nil {
@@ -612,7 +615,6 @@ func NftListv6(setname string) ([]string, error) {
 
 	return []string{}, nil
 }
-
 
 func listIPAddresses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

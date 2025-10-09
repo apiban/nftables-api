@@ -43,6 +43,7 @@ To run, simply set exe permissions (such as `chmod 755 nftables-api`) and run:
 * setname: `APIBANLOCAL`
 * logextra: `false` (add filename to log)
 * ipv6: `true` (set to false to disable ipv6. ipv4 is always on)
+* address: `0.0.0.0` (ip to bind to)
 
 Compiled `nftables-api` will work for most linux distributions and `nftables-api-pi` will work for most Raspberry Pi distributions.
 
