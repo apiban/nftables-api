@@ -44,6 +44,7 @@ To run, simply set exe permissions (such as `chmod 755 nftables-api`) and run:
 * logextra: `false` (add filename to log)
 * ipv6: `true` (set to false to disable ipv6. ipv4 is always on)
 * address: `0.0.0.0` (ip to bind to)
+* counter: `false` (configure set to count packets of each element)
 
 Compiled `nftables-api` will work for most linux distributions and `nftables-api-pi` will work for most Raspberry Pi distributions.
 
@@ -51,7 +52,7 @@ You can also compile the program using `go build main.go`.
 
 ### Example with flags
 
-`./nftables-api -p=8001 -s=BLOCKLIST -x=true -ipv6=false`
+`./nftables-api -p=8001 -s=BLOCKLIST -x=true -ipv6=false -c`
 
 ## Running as a Service (example)
 
@@ -285,10 +286,7 @@ Flushes the APIBANLOCAL/APIBANLOCALv6 chain.
 
 ## License / Warranty
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+`GPLv3`
+
+Copyright: `Fred Posner`
+
