@@ -3,8 +3,8 @@ module nftables-api
 go 1.25.1
 
 require (
-	github.com/apiban/nftlib v0.4.0
-	github.com/palner/pgrtools/pgparse v0.0.0-20251002153613-0dd71678b4c4
+	github.com/apiban/nftlib v0.6.0
+	github.com/palner/pgrtools/pgparse v0.0.0-20260327204845-b364457d3adf
 	github.com/tidwall/sjson v1.2.5
 )
 

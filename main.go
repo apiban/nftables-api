@@ -1,27 +1,7 @@
 /*
 nftables-api - add an ip to local nftables blocklists
-
-The MIT License (MIT)
-
-Copyright (c) 2025 Fred Posner
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Copyright (c) 2025-2026 Fred Posnerx
+License: GPLv3
 
 Example build commands:
 GOOS=linux GOARCH=amd64 go build -o nftables-api
@@ -54,7 +34,7 @@ var (
 	setName     string
 	logFile     string
 	logFileLine bool
-	logLicense  bool
+	useCounter  bool
 	useipv6     bool
 )
 
@@ -71,11 +51,11 @@ func init() {
 	flag.BoolVar(&logFileLine, "logextra", false, "add filename to log")
 	flag.BoolVar(&logFileLine, "x", false, "add filename to log")
 
-	flag.BoolVar(&logLicense, "license", false, "print license in log")
-	flag.BoolVar(&logLicense, "c", false, "print license in log")
-
 	flag.BoolVar(&useipv6, "ipv6", true, "use ipv6 (default is true)")
 	flag.BoolVar(&useipv6, "i", true, "use ipv6 (default is true)")
+
+	flag.BoolVar(&useCounter, "counter", false, "use counters in set (default is false)")
+	flag.BoolVar(&useCounter, "c", false, "use counters in set (default is false)")
 
 	flag.StringVar(&bindAddress, "address", "0.0.0.0", "ip address to bind to")
 	flag.StringVar(&bindAddress, "a", "0.0.0.0", "ip address to bind to")
@@ -238,37 +218,8 @@ func flushSet(w http.ResponseWriter, r *http.Request) {
 
 func InitLog() {
 	log.Print("-> [o] Starting nftables-api")
-	if logLicense {
-		log.Print(" --- ")
-		log.Print("The MIT License (MIT)")
-		log.Print(" ")
-		log.Print("Copyright (c) 2025 Fred Posner")
-		log.Print(" ")
-		log.Print("Permission is hereby granted, free of charge, to any person obtaining a copy")
-		log.Print("of this software and associated documentation files (the \"Software\"), to deal")
-		log.Print("in the Software without restriction, including without limitation the rights")
-		log.Print("to use, copy, modify, merge, publish, distribute, sublicense, and/or sell")
-		log.Print("copies of the Software, and to permit persons to whom the Software is")
-		log.Print("furnished to do so, subject to the following conditions:")
-		log.Print(" ")
-		log.Print("The above copyright notice and this permission notice shall be included in all")
-		log.Print("copies or substantial portions of the Software.")
-		log.Print(" ")
-		log.Print("THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR")
-		log.Print("IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,")
-		log.Print("FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE")
-		log.Print("AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER")
-		log.Print("LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,")
-		log.Print("OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE")
-		log.Print("SOFTWARE.")
-		log.Print(" --- ")
-	} else {
-		log.Print("** Copyright (C) 2025 Fred Posner / The Palner Group, Inc.")
-		log.Print("** This program comes with ABSOLUTELY NO WARRANTY;")
-		log.Print("** This is free software, and you are welcome to redistribute it under certain conditions")
-		log.Print("** See LICENSE (on github or via -c --license flag) for details.")
-	}
-
+	log.Print("-> [*] Copyright (C) 2025-2026 Fred Posner / The Palner Group, Inc.")
+	log.Print("-> [*] License: GPLv3")
 	log.Println("-> [.] Listening on port:", apiPort)
 	log.Println("-> [.] Log extra", logFileLine)
 	log.Println("-> [.] nftables set", setName)
@@ -393,7 +344,12 @@ func NftAddSet(setname string) error {
 	}
 
 	log.Println("[.] creating set", setname, "in", chainDetails.Table, chainDetails.Chain)
-	err = nftlib.NftAddSet(chainDetails, setname)
+	if useCounter {
+		err = nftlib.NftAddSetCounter(chainDetails, setname)
+	} else {
+		err = nftlib.NftAddSet(chainDetails, setname)
+	}
+
 	if err != nil {
 		log.Println("[x] unable to create set:", err.Error())
 		return errors.New("unable to create set")
@@ -455,7 +411,12 @@ func NftAddv6Set(setname string) error {
 	}
 
 	log.Println("[.] creating set", setname, "in", chainDetails.Table, chainDetails.Chain)
-	err = nftlib.NftAddv6Set(chainDetails, setname)
+	if useCounter {
+		err = nftlib.NftAddv6SetCounter(chainDetails, setname)
+	} else {
+		err = nftlib.NftAddv6Set(chainDetails, setname)
+	}
+
 	if err != nil {
 		log.Println("[x] unable to create set:", err.Error())
 		useipv6 = false
