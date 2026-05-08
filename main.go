@@ -29,36 +29,36 @@ import (
 )
 
 var (
-	apiPort     string
-	bindAddress string
-	setName     string
-	logFile     string
-	logFileLine bool
-	useCounter  bool
-	useipv6     bool
+	apiPort     string = "8084"
+	bindAddress string = "0.0.0.0"
+	setName     string = "APIBANLOCAL"
+	logFile     string = "/var/log/nftables-api.log"
+	logFileLine bool   = false
+	useCounter  bool   = false
+	useipv6     bool   = true
 )
 
 func init() {
-	flag.StringVar(&apiPort, "port", "8084", "port to listen on")
-	flag.StringVar(&apiPort, "p", "8084", "port to listen on")
+	flag.StringVar(&apiPort, "port", apiPort, "port to listen on")
+	flag.StringVar(&apiPort, "p", apiPort, "port to listen on")
 
-	flag.StringVar(&logFile, "log", "/var/log/nftables-api.log", "location of log file or - for stdout")
-	flag.StringVar(&logFile, "l", "/var/log/nftables-api.log", "location of log file or - for stdout")
+	flag.StringVar(&logFile, "log", logFile, "location of log file or - for stdout")
+	flag.StringVar(&logFile, "l", logFile, "location of log file or - for stdout")
 
-	flag.StringVar(&setName, "setname", "APIBANLOCAL", "set name for entries")
-	flag.StringVar(&setName, "s", "APIBANLOCAL", "set name for entries")
+	flag.StringVar(&setName, "setname", setName, "set name for entries")
+	flag.StringVar(&setName, "s", setName, "set name for entries")
 
-	flag.BoolVar(&logFileLine, "logextra", false, "add filename to log")
-	flag.BoolVar(&logFileLine, "x", false, "add filename to log")
+	flag.BoolVar(&logFileLine, "logextra", logFileLine, "add filename to log")
+	flag.BoolVar(&logFileLine, "x", logFileLine, "add filename to log")
 
-	flag.BoolVar(&useipv6, "ipv6", true, "use ipv6 (default is true)")
-	flag.BoolVar(&useipv6, "i", true, "use ipv6 (default is true)")
+	flag.BoolVar(&useipv6, "ipv6", useipv6, "use ipv6 (default is true)")
+	flag.BoolVar(&useipv6, "i", useipv6, "use ipv6 (default is true)")
 
-	flag.BoolVar(&useCounter, "counter", false, "use counters in set (default is false)")
-	flag.BoolVar(&useCounter, "c", false, "use counters in set (default is false)")
+	flag.BoolVar(&useCounter, "counter", useCounter, "use counters in set (default is false)")
+	flag.BoolVar(&useCounter, "c", useCounter, "use counters in set (default is false)")
 
-	flag.StringVar(&bindAddress, "address", "0.0.0.0", "ip address to bind to")
-	flag.StringVar(&bindAddress, "a", "0.0.0.0", "ip address to bind to")
+	flag.StringVar(&bindAddress, "address", bindAddress, "ip address to bind to")
+	flag.StringVar(&bindAddress, "a", bindAddress, "ip address to bind to")
 }
 
 func main() {
@@ -223,6 +223,7 @@ func InitLog() {
 	log.Println("-> [.] Listening on port:", apiPort)
 	log.Println("-> [.] Log extra", logFileLine)
 	log.Println("-> [.] nftables set", setName)
+	log.Println("-> [.] Use counter", useCounter)
 }
 
 func jsonHandleAddress(w http.ResponseWriter, r *http.Request) {
