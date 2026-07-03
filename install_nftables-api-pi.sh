@@ -59,7 +59,7 @@ echo ""
 echo " -> downloading nftables-api"
 mkdir /usr/local/src/nftables-api
 cd /usr/local/src/nftables-api
-wget https://github.com/apiban/nftables-api/raw/main/nftables-api-pi &>/dev/null
+wget https://github.com/apiban/nftables-api/raw/1.0/nftables-api-pi &>/dev/null
 if [ "$?" -eq "0" ]
 then
   echo "  -o downloaded"
