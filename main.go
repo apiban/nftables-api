@@ -91,6 +91,7 @@ func main() {
 	router.HandleFunc("GET /block/{ipaddress}", addIPAddress)
 	router.HandleFunc("GET /blockip/{ipaddress}", addIPAddress)
 	router.HandleFunc("GET /flush", flushSet)
+	router.HandleFunc("GET /flushall", flushSet)
 	router.HandleFunc("GET /flushset", flushSet)
 	router.HandleFunc("GET /remove/{ipaddress}", removeIPAddress)
 	router.HandleFunc("GET /removeip/{ipaddress}", removeIPAddress)
