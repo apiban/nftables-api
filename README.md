@@ -254,7 +254,7 @@ or
 
 Flushes the APIBANLOCAL/APIBANLOCALv6 chain.
 
-* **URL**: /[flush|flushset]
+* **URL**: /[flush|flushall|flushset]
 * **METHOD**: `GET`
 * **Auth**: None
 * **RESPONSE**: 200/4xx/5xx
